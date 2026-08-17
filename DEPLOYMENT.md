@@ -2,6 +2,8 @@
 
 ORVIA is the product. Softorica is the company. The FastAPI service is the tenant SaaS API (Modules 1–11). Do not point `VITE_TENANT_API_URL` at goburq.com.
 
+For a completely free client demo (Cloudflare Pages + Render Web Service + Render PostgreSQL), follow **[FREE_DEMO_DEPLOYMENT.md](FREE_DEMO_DEPLOYMENT.md)**. Do not use this file’s production SMTP/S3 requirements for that demo.
+
 Never commit `.env` files, JWT secrets, database passwords, SMTP passwords, or S3 keys.
 
 ## Local demo (recommended)
@@ -27,7 +29,7 @@ copy .env.example .env
 # Edit .env: set JWT_SECRET, keep APP_ENV=development for local demo
 # Optional durable demo login:
 # DEMO_SEED_ENABLED=true
-# DEMO_SEED_EMAIL=demo@orvia.local
+# DEMO_SEED_EMAIL=demo@orvia.app
 # DEMO_SEED_PASSWORD=<at least 10 characters>
 .\.venv\Scripts\python.exe -m alembic upgrade head
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
@@ -125,8 +127,10 @@ Run migrations before starting:
 
 ```
 python -m alembic upgrade head
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
 ```
+
+On Render, use `sh start.sh` instead (see [FREE_DEMO_DEPLOYMENT.md](FREE_DEMO_DEPLOYMENT.md)).
 
 Run the outbox worker as a second process.
 

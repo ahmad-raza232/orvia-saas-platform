@@ -1,0 +1,4 @@
+*.sh text eol=lf
+backend/Procfile text eol=lf
+frontend/public/_redirects text eol=lf
+frontend/public/_headers text eol=lf

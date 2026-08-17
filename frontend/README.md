@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-See [DEPLOYMENT.md](../DEPLOYMENT.md) for production, CORS, and demo-account notes.
+See [FREE_DEMO_DEPLOYMENT.md](../FREE_DEMO_DEPLOYMENT.md) for the free Cloudflare Pages + Render client demo, and [DEPLOYMENT.md](../DEPLOYMENT.md) for local/production notes.
 
 ## Scripts
 

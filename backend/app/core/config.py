@@ -1,5 +1,27 @@
-from pydantic import Field, model_validator
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def normalize_database_url(value: str | None) -> str:
+    """Accept Render's postgres:// URLs and SQLAlchemy postgresql:// URLs."""
+    cleaned = (value or "").strip()
+    if cleaned.startswith("postgres://"):
+        cleaned = "postgresql://" + cleaned[len("postgres://") :]
+    if cleaned.startswith("postgresql://") and "+psycopg" not in cleaned.split("://", 1)[0]:
+        cleaned = "postgresql+psycopg://" + cleaned[len("postgresql://") :]
+    parts = urlsplit(cleaned)
+    host = (parts.hostname or "").lower()
+    query = dict(parse_qsl(parts.query, keep_blank_values=True))
+    has_sslmode = any(key.lower() == "sslmode" for key in query)
+    if host.endswith(".render.com") and not has_sslmode:
+        query["sslmode"] = "require"
+        cleaned = urlunsplit(
+            (parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment)
+        )
+    return cleaned
+
 
 _WEAK_JWT_SECRETS = frozenset(
     {
@@ -85,9 +107,32 @@ class Settings(BaseSettings):
     def smtp_from_address(self) -> str:
         return (self.smtp_from_email or self.smtp_from or "").strip()
 
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def coerce_database_url(cls, value: str) -> str:
+        return normalize_database_url(value)
+
     @property
     def is_production(self) -> bool:
         return self.app_env.lower().strip() in {"production", "prod"}
+
+    @property
+    def is_demo(self) -> bool:
+        return self.app_env.lower().strip() in {"demo", "free-demo"}
+
+    def _require_hosted_secrets(self) -> None:
+        if not (self.database_url or "").strip():
+            raise ValueError("DATABASE_URL is required")
+        secret = (self.jwt_secret or "").strip()
+        if len(secret) < 32 or secret.lower() in _WEAK_JWT_SECRETS:
+            raise ValueError("JWT_SECRET is too weak")
+        if self.debug:
+            raise ValueError("DEBUG must be false")
+        origins = [origin.lower() for origin in self.cors_origin_list]
+        if not origins:
+            raise ValueError("CORS_ORIGINS must be set")
+        if any(origin in {"*", "null"} for origin in origins):
+            raise ValueError("CORS_ORIGINS cannot use a wildcard")
 
     @model_validator(mode="after")
     def reject_unsafe_production_settings(self):
@@ -99,6 +144,13 @@ class Settings(BaseSettings):
             raise ValueError("AUTH_LOGIN_RATE_LIMIT_MAX_ATTEMPTS must be at least 1")
         if self.auth_login_rate_limit_window_seconds < 1:
             raise ValueError("AUTH_LOGIN_RATE_LIMIT_WINDOW_SECONDS must be at least 1")
+        if self.is_demo:
+            self._require_hosted_secrets()
+            if self.demo_seed_enabled and (
+                not (self.demo_seed_email or "").strip() or not (self.demo_seed_password or "").strip()
+            ):
+                raise ValueError("DEMO_SEED_EMAIL and DEMO_SEED_PASSWORD are required when DEMO_SEED_ENABLED=true")
+            return self
         if not self.is_production:
             return self
         if self.demo_seed_enabled:

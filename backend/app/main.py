@@ -22,7 +22,7 @@ async def lifespan(_app: FastAPI):
     db = SessionLocal()
     try:
         seed_roles(db)
-        if settings.demo_seed_enabled and not settings.is_production:
+        if settings.demo_seed_enabled:
             seed_demo_workspace(
                 db,
                 email=settings.demo_seed_email or "",
@@ -36,7 +36,7 @@ async def lifespan(_app: FastAPI):
     yield
 
 
-_disable_docs = settings.is_production
+_disable_docs = settings.is_production or settings.is_demo
 app = FastAPI(
     title=settings.app_name,
     version="0.11.0",

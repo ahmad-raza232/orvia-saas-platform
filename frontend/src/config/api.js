@@ -8,8 +8,9 @@ export const API_URL = (
 
 /**
  * ORVIA tenant SaaS API (FastAPI /api/v1).
- * Production builds default to a same-origin relative path so localhost is never baked in.
- * Local Vite can override with VITE_TENANT_API_URL or use the /api proxy.
+ * Local Vite: keep VITE_TENANT_API_URL=/api/v1 so the proxy forwards to 127.0.0.1:8000.
+ * Cloudflare Pages: set VITE_TENANT_API_URL to the public Render origin + /api/v1.
+ * Never bake localhost into a production build.
  */
 export const TENANT_API_URL = (
   import.meta.env.VITE_TENANT_API_URL ||

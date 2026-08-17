@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from app.core.config import Settings, settings
+from app.core.config import Settings, normalize_database_url, settings
 from app.models.audit_log import AuditLog
 from app.models.organization import Organization, OrganizationStatus
 from tests.test_auth_and_organizations import auth_header, login, register
@@ -206,4 +206,85 @@ def test_production_settings_reject_unsafe_defaults() -> None:
             debug=False,
             cors_origins="https://app.example.com",
             demo_seed_enabled=True,
+        )
+
+
+def test_normalize_database_url_accepts_render_postgres_scheme() -> None:
+    assert (
+        normalize_database_url("postgres://u:p@localhost:5432/orvia")
+        == "postgresql+psycopg://u:p@localhost:5432/orvia"
+    )
+    assert (
+        normalize_database_url("postgresql://u:p@localhost:5432/orvia")
+        == "postgresql+psycopg://u:p@localhost:5432/orvia"
+    )
+    already = "postgresql+psycopg://u:p@localhost:5432/orvia"
+    assert normalize_database_url(already) == already
+    render = normalize_database_url(
+        "postgres://u:p@dpg-abc.oregon-postgres.render.com/orvia"
+    )
+    assert render.startswith("postgresql+psycopg://")
+    assert "sslmode=require" in render
+    with_ssl = normalize_database_url(
+        "postgres://u:p@dpg-abc.oregon-postgres.render.com/orvia?sslmode=prefer"
+    )
+    assert "sslmode=prefer" in with_ssl
+    assert with_ssl.count("sslmode=") == 1
+
+
+def test_demo_settings_allow_logging_memory_and_reject_wildcard() -> None:
+    ok = Settings(
+        _env_file=None,
+        app_env="demo",
+        database_url="postgres://orvia:orvia@dpg-abc.oregon-postgres.render.com/orvia",
+        jwt_secret="a-sufficiently-long-demo-jwt-secret-value-32",
+        email_provider="logging",
+        storage_provider="memory",
+        debug=False,
+        cors_origins="https://orvia-saas-platform.pages.dev",
+        demo_seed_enabled=True,
+        demo_seed_email="demo@orvia.app",
+        demo_seed_password="DemoPass1234",
+    )
+    assert ok.is_demo is True
+    assert ok.is_production is False
+    assert ok.database_url.startswith("postgresql+psycopg://")
+    assert "sslmode=require" in ok.database_url
+
+    with pytest.raises(ValidationError):
+        Settings(
+            _env_file=None,
+            app_env="demo",
+            database_url="postgresql+psycopg://orvia:orvia@localhost:5433/orvia",
+            jwt_secret="a-sufficiently-long-demo-jwt-secret-value-32",
+            debug=False,
+            cors_origins="*",
+        )
+    with pytest.raises(ValidationError):
+        Settings(
+            _env_file=None,
+            app_env="demo",
+            database_url="postgresql+psycopg://orvia:orvia@localhost:5433/orvia",
+            jwt_secret="change-me-to-a-long-random-secret",
+            debug=False,
+            cors_origins="https://orvia-saas-platform.pages.dev",
+        )
+    with pytest.raises(ValidationError):
+        Settings(
+            _env_file=None,
+            app_env="demo",
+            database_url="postgresql+psycopg://orvia:orvia@localhost:5433/orvia",
+            jwt_secret="a-sufficiently-long-demo-jwt-secret-value-32",
+            debug=False,
+            cors_origins="https://orvia-saas-platform.pages.dev",
+            demo_seed_enabled=True,
+        )
+    with pytest.raises(ValidationError):
+        Settings(
+            _env_file=None,
+            app_env="free-demo",
+            database_url="postgresql+psycopg://orvia:orvia@localhost:5433/orvia",
+            jwt_secret="a-sufficiently-long-demo-jwt-secret-value-32",
+            debug=True,
+            cors_origins="https://orvia-saas-platform.pages.dev",
         )
