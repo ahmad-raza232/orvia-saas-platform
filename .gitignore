@@ -1,0 +1,56 @@
+# Local environment and secrets — never commit
+.env
+.env.*
+!.env.example
+**/.env
+!**/.env.example
+*.pem
+*.key
+*.p12
+credentials.json
+secrets.json
+
+# Virtualenvs
+.venv/
+backend/.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Frontend build / deps
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+dist/
+dist-ssr/
+
+# Local logs and scratch output
+*.log
+uvicorn.err.log
+uvicorn.out.log
+pytest-repair.out
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Editor / OS / Cursor local
+.cursor/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test / coverage artifacts
+coverage/
+.nyc_output/

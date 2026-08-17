@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #f7f1e9;
+  --color-surface: #fffcfa;
+  --color-surface-muted: #f3ebe1;
+  --color-primary: #556b2f;
+  --color-primary-hover: #445526;
+  --color-primary-light: #e7eed8;
+  --color-accent: #ffdab9;
+  --color-text: #1c1917;
+  --color-text-secondary: #57534e;
+  --color-text-muted: #78716c;
+  --color-border: #e6ddd2;
+  --color-success: #3f6b3a;
+  --color-warning: #b45309;
+  --color-error: #b42318;
+  --color-info: #3d5a80;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 6px 20px rgba(28, 25, 23, 0.05);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #ffdab9;
+  color: #1c1917;
+}
+
+:focus-visible {
+  outline: 2px solid #556b2f;
+  outline-offset: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3ebe1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4b8a8;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #556b2f;
+}
+
+@layer components {
+  .font-display {
+    font-family: 'Fraunces', Georgia, serif;
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.45s ease-out;
+}
+
+.animate-fade-in {
+  animation: none;
+}
+
+.stagger-1,
+.stagger-2,
+.stagger-3 {
+  animation-delay: 0ms;
+}
+
+@keyframes fadeUp {
+  from {
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.Toastify__toast {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  border-radius: 12px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  body {
+    background: white !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  nav,
+  aside,
+  header,
+  .Toastify {
+    display: none !important;
+  }
+}
