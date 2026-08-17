@@ -48,7 +48,7 @@ const OrganizationPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organization?.id, permissions.canManageMembers]);
 
-  if (loading) return <LoadingState label="Loading Softorica organization…" />;
+  if (loading) return <LoadingState label="Loading organization…" />;
   if (error) {
     return (
       <ErrorState title="Organization unavailable" description={error} onRetry={load} />
@@ -59,7 +59,7 @@ const OrganizationPage = () => {
     <div className="space-y-6 animate-fade-up">
       <SectionHeading
         title={organization?.name || 'Organization'}
-        description={`Softorica workspace · Slug: ${organization?.slug || '—'} · Your role: ${role || '—'}`}
+        description={`ORVIA workspace · Slug: ${organization?.slug || '—'} · Your role: ${role || '—'}`}
       />
 
       {permissions.canUpdateOrganization && (

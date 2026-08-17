@@ -6,7 +6,7 @@ Legacy GoBurq GBQ tracking remains on the separate goburq.com API.
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session, joinedload
 
-from app.core.exceptions import NotFoundError
+from app.core.exceptions import InvalidTrackingNumberError, NotFoundError
 from app.core.tracking import is_orvia_tracking_number, normalize_tracking_number
 from app.db.database import get_db
 from app.models.shipment import Shipment
@@ -30,6 +30,8 @@ def public_track_shipment(
     db: Session = Depends(get_db),
 ) -> PublicTrackingResponse:
     cleaned = normalize_tracking_number(tracking_number)
+    if cleaned.startswith("ORVIA-") and not is_orvia_tracking_number(cleaned):
+        raise InvalidTrackingNumberError()
     if not is_orvia_tracking_number(cleaned):
         raise NotFoundError("Shipment not found.")
 

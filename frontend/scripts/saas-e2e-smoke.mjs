@@ -5,10 +5,14 @@
  */
 import assert from 'node:assert/strict';
 
-const BASE = (process.env.VITE_TENANT_API_URL || 'http://127.0.0.1:8000/api/v1').replace(
-  /\/$/,
-  ''
-);
+const BASE = (() => {
+  const raw = (process.env.VITE_TENANT_API_URL || 'http://127.0.0.1:8000/api/v1').replace(
+    /\/$/,
+    ''
+  );
+  if (raw.startsWith('/')) return `http://127.0.0.1:8000${raw}`;
+  return raw;
+})();
 
 async function req(method, path, { token, org, body } = {}) {
   const headers = { 'Content-Type': 'application/json' };

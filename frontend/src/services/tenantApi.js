@@ -23,7 +23,7 @@ tenantApi.interceptors.request.use((config) => {
   if (import.meta.env.DEV) {
     const method = (config.method || 'get').toUpperCase();
     const full = `${config.baseURL || ''}${config.url || ''}`;
-    console.info(`[Softorica tenantApi] ${method} ${full}`);
+    console.info(`[ORVIA tenantApi] ${method} ${full}`);
   }
   return config;
 });

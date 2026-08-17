@@ -5,20 +5,24 @@ import SectionHeading from './ui/SectionHeading';
 
 const faqs = [
   {
-    question: 'Do you offer COD?',
-    answer: 'Yes, we specialize in COD services for online sellers and small businesses.',
+    question: 'Do you support cash on delivery?',
+    answer:
+      'Yes. ORVIA stores COD amount and currency on each shipment. Prepaid bookings omit COD fields.',
   },
   {
-    question: 'How can I track my parcel?',
-    answer: 'Use the tracking section with your GoBurq tracking ID for real-time updates.',
+    question: 'How do I track a shipment?',
+    answer:
+      'Use the public tracking page with an ORVIA-XXXXXXXXXX tracking ID. Recipients do not need to sign in.',
   },
   {
-    question: 'Which areas do you cover?',
-    answer: 'We cover Lahore for same-day delivery and all major Pakistani cities for nationwide shipping.',
+    question: 'Who is Softorica?',
+    answer:
+      'Softorica is the company that builds and operates ORVIA, the multi-tenant logistics SaaS.',
   },
   {
-    question: 'Do you provide bulk discounts?',
-    answer: 'Yes, we have special business plans for high-volume shippers.',
+    question: 'Can my team share one workspace?',
+    answer:
+      'Yes. Create an organization, invite members, and assign roles. Each organization stays tenant-isolated.',
   },
 ];
 
@@ -31,7 +35,7 @@ const FAQ = () => {
         <SectionHeading
           eyebrow="FAQ"
           title="Questions, answered plainly"
-          description="The essentials about coverage, COD, and tracking."
+          description="The essentials about ORVIA tracking, COD, and your Softorica workspace."
         />
         <div className="space-y-3">
           {faqs.map((faq, index) => {

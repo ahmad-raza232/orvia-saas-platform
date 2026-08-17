@@ -199,9 +199,11 @@ def test_production_settings_reject_unsafe_defaults() -> None:
             email_provider="smtp",
             smtp_host="smtp.example.com",
             smtp_from_email="noreply@example.com",
-            storage_provider="memory",
+            storage_provider="s3",
             s3_bucket="orvia-pod",
             s3_access_key_id="AKIATEST",
             s3_secret_access_key="storage-secret-not-a-real-key",
             debug=False,
+            cors_origins="https://app.example.com",
+            demo_seed_enabled=True,
         )

@@ -16,6 +16,7 @@ import Select from '../../components/ui/Select';
 import Input from '../../components/ui/Input';
 import LoadingState from '../../components/ui/LoadingState';
 import ErrorState from '../../components/ui/ErrorState';
+import EmptyState from '../../components/ui/EmptyState';
 import { StatusBadge } from '../../components/ui/Badge';
 import { publicTrackUrl } from '../../utils/tracking';
 import {
@@ -65,19 +66,31 @@ const ShipmentDetailPage = () => {
       setShipment(shipRes.data);
       setHistory(histRes.data.items || []);
       if (shipRes.data.status === 'OUT_FOR_DELIVERY' && permissions.canAssignRiders) {
-        const ridersRes = await riderApi.list({ page: 1, page_size: 100, status: 'ACTIVE' });
-        setRiders(ridersRes.data.items || []);
+        try {
+          const ridersRes = await riderApi.list({ page: 1, page_size: 100, status: 'ACTIVE' });
+          setRiders(ridersRes.data.items || []);
+        } catch {
+          setRiders([]);
+        }
       }
       if (['DELIVERED'].includes(shipRes.data.status) && permissions.canReadPod) {
         try {
           const podRes = await shipmentApi.getPod(id);
           setPod(podRes.data);
-          const evRes = await podEvidenceApi.list(id);
-          setEvidence(evRes.data.items || []);
+          try {
+            const evRes = await podEvidenceApi.list(id);
+            setEvidence(evRes.data.items || []);
+          } catch {
+            setEvidence([]);
+          }
         } catch (err) {
-          if (err?.response?.status !== 404) throw err;
-          setPod(null);
-          setEvidence([]);
+          if (err?.response?.status !== 404) {
+            setPod(null);
+            setEvidence([]);
+          } else {
+            setPod(null);
+            setEvidence([]);
+          }
         }
       }
     } catch (err) {
@@ -346,17 +359,26 @@ const ShipmentDetailPage = () => {
           <h2 className="font-display text-lg text-ink">Status history</h2>
         </div>
         <ul className="divide-y divide-line">
-          {history.map((row) => (
-            <li key={row.id} className="flex items-center justify-between gap-3 px-5 py-3 text-sm">
-              <div>
-                <p className="font-semibold text-ink">
-                  {row.previous_status || '—'} → {row.new_status}
-                </p>
-                {row.note && <p className="text-xs text-ink-muted">{row.note}</p>}
-              </div>
-              <span className="text-xs text-ink-muted">{formatDate(row.created_at, true)}</span>
+          {history.length === 0 ? (
+            <li className="px-5 py-8">
+              <EmptyState
+                title="No status history yet"
+                description="Status changes will appear here as the shipment moves through operations."
+              />
             </li>
-          ))}
+          ) : (
+            history.map((row) => (
+              <li key={row.id} className="flex items-center justify-between gap-3 px-5 py-3 text-sm">
+                <div>
+                  <p className="font-semibold text-ink">
+                    {row.previous_status || '—'} → {row.new_status}
+                  </p>
+                  {row.note && <p className="text-xs text-ink-muted">{row.note}</p>}
+                </div>
+                <span className="text-xs text-ink-muted">{formatDate(row.created_at, true)}</span>
+              </li>
+            ))
+          )}
         </ul>
       </Card>
 
@@ -401,12 +423,21 @@ const ShipmentDetailPage = () => {
               </form>
             )}
           </div>
+          {!pod && (
+            <EmptyState
+              title="No proof of delivery yet"
+              description="Record recipient name and an optional delivery note, then upload photo or signature evidence."
+            />
+          )}
           {pod && (
             <>
               <p className="text-sm text-ink">
                 Recipient: {pod.recipient_name} · Delivered{' '}
                 {formatDate(pod.delivered_at, true)}
               </p>
+              {pod.delivery_note && (
+                <p className="text-sm text-ink-secondary">Note: {pod.delivery_note}</p>
+              )}
               {permissions.canCreatePod && (
                 <form onSubmit={onUpload} className="grid gap-3 md:grid-cols-3">
                   <Select

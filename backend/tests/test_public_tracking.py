@@ -69,5 +69,9 @@ def test_created_shipment_uses_orvia_and_public_track(client) -> None:
     missing = client.get("/api/v1/public/tracking/ORVIA-ZZZZZZZZZZ")
     assert missing.status_code == 404
 
+    invalid_format = client.get("/api/v1/public/tracking/ORVIA-SHORT")
+    assert invalid_format.status_code == 400
+    assert invalid_format.json()["error"]["code"] == "INVALID_TRACKING_NUMBER"
+
     gbq_rejected = client.get("/api/v1/public/tracking/GBQ12345678")
     assert gbq_rejected.status_code == 404

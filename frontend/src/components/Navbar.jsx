@@ -9,7 +9,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     setIsOpen(false);
@@ -42,10 +42,10 @@ const Navbar = () => {
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
           <button type="button" onClick={() => handleMenuNavigation('services')} className={navButtonClass}>
-            Services
+            Product
           </button>
           <button type="button" onClick={() => handleMenuNavigation('pricing')} className={navButtonClass}>
-            Pricing
+            Plans
           </button>
           <button type="button" onClick={() => handleMenuNavigation('tracking')} className={navButtonClass}>
             Tracking
@@ -56,13 +56,13 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          {!user ? (
+          {!isAuthenticated ? (
             <>
               <Button variant="ghost" size="sm" onClick={() => navigate('/login')}>
                 Login
               </Button>
-              <Button size="sm" onClick={() => handleMenuNavigation('contact')}>
-                Book pickup
+              <Button size="sm" onClick={() => navigate('/register')}>
+                Get Started
               </Button>
             </>
           ) : (
@@ -103,27 +103,29 @@ const Navbar = () => {
               onClick={() => handleMenuNavigation(id)}
               className="block w-full rounded-md px-3 py-2.5 text-left text-sm font-medium capitalize text-ink hover:bg-muted"
             >
-              {id}
+              {id === 'services' ? 'Product' : id === 'pricing' ? 'Plans' : id}
             </button>
           ))}
           <div className="flex flex-col gap-2 pt-3">
-            {!user ? (
+            {!isAuthenticated ? (
               <>
                 <Button variant="outline" onClick={() => { setIsOpen(false); navigate('/login'); }}>
                   Login
                 </Button>
-                <Button onClick={() => handleMenuNavigation('contact')}>Book pickup</Button>
+                <Button onClick={() => { setIsOpen(false); navigate('/register'); }}>
+                  Get Started
+                </Button>
               </>
             ) : (
               <>
-                <Button variant="outline" onClick={() => { setIsOpen(false); navigate('/user/dashboard'); }}>
-                  Dashboard
+                <Button variant="outline" onClick={() => { setIsOpen(false); navigate('/app'); }}>
+                  Workspace
                 </Button>
-                <Button onClick={() => { setIsOpen(false); navigate('/book-parcel'); }}>
-                  Book parcel
+                <Button onClick={() => { setIsOpen(false); navigate('/app/shipments/new'); }}>
+                  New shipment
                 </Button>
                 <Button variant="ghost" onClick={() => { setIsOpen(false); logout(); navigate('/'); }}>
-                  Logout
+                  Sign out
                 </Button>
               </>
             )}

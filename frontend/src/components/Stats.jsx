@@ -25,7 +25,7 @@ const Stats = () => (
   <section className="bg-surface py-20" id="trust">
     <Container>
       <SectionHeading
-        eyebrow="Why Softorica"
+        eyebrow="Why ORVIA"
         title="A quieter kind of logistics"
         description="Premium enough for brands. Simple enough for a single parcel."
       />

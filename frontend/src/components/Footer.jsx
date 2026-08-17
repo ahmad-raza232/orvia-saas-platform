@@ -20,7 +20,7 @@ const Footer = () => {
         <div>
           <Logo to="/" inverted />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-peach/80">
-            Premium parcel delivery and logistics for individuals and businesses across Pakistan.
+            ORVIA is a multi-tenant logistics SaaS for shipments, riders, customers, and proof of delivery. Built by Softorica.
           </p>
           <p className="mt-4 text-xs uppercase tracking-[0.18em] text-peach/70">
             Routes that arrive.
@@ -56,8 +56,8 @@ const Footer = () => {
 
       <div className="border-t border-peach/15">
         <Container className="flex flex-col items-center justify-between gap-3 py-5 text-xs text-peach/70 sm:flex-row">
-          <p>© {new Date().getFullYear()} Softorica. All rights reserved.</p>
-          <p>Crafted for reliable routes.</p>
+          <p>© {new Date().getFullYear()} Softorica. ORVIA is a Softorica product.</p>
+          <p>Professional logistics operations software.</p>
         </Container>
       </div>
     </footer>

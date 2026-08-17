@@ -46,7 +46,7 @@ const ShipmentSuccessPage = () => {
     };
   }, [id, location.state]);
 
-  if (loading) return <LoadingState label="Loading Softorica shipment receipt…" />;
+  if (loading) return <LoadingState label="Loading ORVIA shipment receipt…" />;
   if (error) {
     return (
       <ErrorState
@@ -74,7 +74,7 @@ const ShipmentSuccessPage = () => {
     <div className="mx-auto max-w-4xl space-y-6 animate-fade-up">
       <SectionHeading
         title="Shipment created successfully"
-        description="Your Softorica tracking ID was issued by the API."
+        description="Your ORVIA tracking ID was issued by the API."
         action={
           <div className="flex flex-wrap gap-2">
             <Button to="/app" variant="outline" size="sm">
@@ -92,7 +92,7 @@ const ShipmentSuccessPage = () => {
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <p className="font-mono text-xl font-bold text-ink">{shipment.tracking_number}</p>
           <Button type="button" size="sm" variant="outline" onClick={copyTracking}>
-            <Copy className="h-4 w-4" /> Copy
+            <Copy className="h-4 w-4" /> Copy Tracking ID
           </Button>
           <Button
             type="button"
@@ -103,7 +103,7 @@ const ShipmentSuccessPage = () => {
           </Button>
         </div>
         <p className="mt-2 text-sm text-success/90">
-          Opens public Softorica tracking at{' '}
+          Opens public ORVIA tracking at{' '}
           <span className="font-mono text-xs">{relativeTrack}</span>
         </p>
       </div>

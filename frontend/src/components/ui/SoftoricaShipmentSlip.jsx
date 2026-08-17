@@ -79,7 +79,7 @@ const SoftoricaShipmentSlip = ({ shipment, trackUrl }) => {
         useCORS: true,
       });
       const link = document.createElement('a');
-      link.download = `softorica-slip-${trackingNumber || shipment?.id}.png`;
+      link.download = `orvia-slip-${trackingNumber || shipment?.id}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       toast.success('Slip downloaded');
@@ -106,7 +106,7 @@ const SoftoricaShipmentSlip = ({ shipment, trackUrl }) => {
           <Printer className="h-4 w-4" /> Print
         </Button>
         <Button type="button" variant="outline" onClick={copyTracking}>
-          <Copy className="h-4 w-4" /> Copy Tracking
+          <Copy className="h-4 w-4" /> Copy Tracking ID
         </Button>
         <Button
           type="button"
@@ -125,8 +125,10 @@ const SoftoricaShipmentSlip = ({ shipment, trackUrl }) => {
           <div className="flex items-center gap-3">
             <Mark inverted className="h-10 w-10" />
             <div>
-              <p className="font-display text-2xl font-semibold tracking-[0.06em]">SOFTORICA</p>
-              <p className="text-xs uppercase tracking-[0.18em] text-peach/80">Shipment Receipt</p>
+              <p className="font-display text-2xl font-semibold tracking-[0.08em]">ORVIA</p>
+              <p className="text-xs uppercase tracking-[0.18em] text-peach/80">
+                Shipment slip · Softorica
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -308,7 +310,7 @@ const SoftoricaShipmentSlip = ({ shipment, trackUrl }) => {
         </div>
 
         <div className="bg-muted/60 px-5 py-4 text-center">
-          <p className="text-xs uppercase tracking-[0.18em] text-ink-muted">Track with Softorica</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-ink-muted">Track with ORVIA</p>
           <p className="mt-1 font-mono text-lg font-bold text-olive">{trackingNumber}</p>
           <p className="mt-2 text-xs text-ink-secondary">
             Scan the QR code or open{' '}
@@ -318,7 +320,7 @@ const SoftoricaShipmentSlip = ({ shipment, trackUrl }) => {
               rel="noopener noreferrer"
               className="font-semibold text-olive underline"
             >
-              public Softorica tracking
+              public ORVIA tracking
             </a>
           </p>
         </div>

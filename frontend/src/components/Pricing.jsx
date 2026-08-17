@@ -69,7 +69,7 @@ const Pricing = () => {
                   onClick={(event) => {
                     event.stopPropagation();
                     setSelectedPlan(index);
-                    navigate('/book-parcel');
+                    navigate('/register');
                   }}
                 >
                   {selected ? 'Continue' : 'Select'}

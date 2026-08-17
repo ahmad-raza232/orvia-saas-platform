@@ -34,11 +34,18 @@ const Logo = ({
       {showWordmark && (
         <span className="leading-none">
           <span
-            className={`block font-display text-[1.35rem] font-semibold tracking-[0.04em] ${
+            className={`block font-display text-[1.35rem] font-semibold tracking-[0.08em] ${
               inverted ? 'text-peach' : 'text-ink'
             }`}
           >
-            Softorica
+            ORVIA
+          </span>
+          <span
+            className={`mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.18em] ${
+              inverted ? 'text-peach/75' : 'text-ink-muted'
+            }`}
+          >
+            by Softorica
           </span>
         </span>
       )}
@@ -54,7 +61,7 @@ const Logo = ({
       to={to}
       onClick={onClick}
       className="inline-flex items-center rounded-md focus-visible:outline-none"
-      aria-label="Softorica home"
+      aria-label="ORVIA home"
     >
       {content}
     </Link>

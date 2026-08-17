@@ -4,7 +4,6 @@ import Pricing from '../components/Pricing';
 import Stats from '../components/Stats';
 import TrackingSection from '../components/TrackingSection';
 import FAQ from '../components/FAQ';
-import Contact from '../components/Contact';
 import Container from '../components/ui/Container';
 import SectionHeading from '../components/ui/SectionHeading';
 import Button from '../components/ui/Button';
@@ -15,17 +14,17 @@ const steps = [
   {
     icon: Package,
     title: 'Book',
-    text: 'Share sender, receiver, and parcel details. See the price before you confirm.',
+    text: 'Capture independent sender and receiver details, parcel data, pickup date, and COD or prepaid.',
   },
   {
     icon: Truck,
-    title: 'Move',
-    text: 'We pick up on schedule and keep the shipment on a clear, tracked route.',
+    title: 'Operate',
+    text: 'Advance status, assign a rider, and record proof of delivery with evidence in your ORVIA workspace.',
   },
   {
     icon: Search,
-    title: 'Arrive',
-    text: 'Follow the GoBurq tracking ID until it is delivered — and collected on COD if needed.',
+    title: 'Track',
+    text: 'Share an ORVIA-XXXXXXXXXX tracking ID and a public tracking page — no login required.',
   },
 ];
 
@@ -41,24 +40,24 @@ const Home = () => (
       <Container className="grid items-center gap-10 lg:grid-cols-2">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-olive">
-            For commerce
+            For operations teams
           </p>
           <h2 className="mt-3 font-display text-h2 text-ink">
-            Built for shops that ship every day
+            A workspace for shops that ship every day
           </h2>
           <p className="mt-4 max-w-xl text-ink-secondary">
-            COD collections, remittance, bulk rates, and a dashboard for high-volume
-            sellers. Keep selling. We will keep the routes moving.
+            ORVIA keeps shipments, customers, riders, and notifications in one
+            tenant-isolated SaaS. Softorica builds and operates the platform.
           </p>
           <Button to="/register" className="mt-6">
-            Create a business account
+            Get Started
           </Button>
         </div>
         <div className="rounded-lg bg-olive p-8 text-peach">
-          <p className="font-display text-3xl">COD, nationwide, on your terms.</p>
+          <p className="font-display text-3xl">COD, tracking, and POD — in one product.</p>
           <p className="mt-4 text-sm leading-relaxed text-peach/80">
-            Optional business and bank details at signup help settle collections faster.
-            Custom pricing plans can be assigned to your account.
+            Create an organization, invite your team, and start booking shipments
+            with printable ORVIA slips and QR codes that open public tracking.
           </p>
         </div>
       </Container>
@@ -69,7 +68,7 @@ const Home = () => (
         <SectionHeading
           eyebrow="How it works"
           title="Three calm steps"
-          description="No clutter. Just a route from pickup to door."
+          description="From booking to a public ORVIA tracking page."
         />
         <div className="grid gap-5 md:grid-cols-3">
           {steps.map((step, index) => (
@@ -86,25 +85,42 @@ const Home = () => (
       </Container>
     </section>
 
-    <Contact />
+    <section className="bg-muted py-20" id="contact">
+      <Container className="max-w-3xl text-center">
+        <SectionHeading
+          eyebrow="Get started"
+          title="Open your ORVIA workspace"
+          description="Create a Softorica-powered account, set up your organization, and book the first shipment."
+        />
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Button to="/register" size="lg">
+            Get Started
+          </Button>
+          <Button to="/login" variant="outline" size="lg">
+            Login
+          </Button>
+        </div>
+      </Container>
+    </section>
+
     <FAQ />
 
     <section className="bg-olive py-16 text-center text-peach">
       <Container>
         <h2 className="font-display text-h2">Ready when the parcel is.</h2>
         <p className="mx-auto mt-3 max-w-lg text-peach/80">
-          Book a pickup or create an account to manage shipments, COD, and tracking in one place.
+          Sign in to manage shipments, riders, customers, COD, and public ORVIA tracking.
         </p>
         <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button to="/book-parcel" variant="secondary">
-            Book a parcel
+          <Button to="/login" variant="secondary">
+            Login
           </Button>
           <Button
             to="/register"
             variant="outline"
             className="border-peach/30 bg-transparent text-peach hover:bg-olive-dark"
           >
-            Create account
+            Get Started
           </Button>
         </div>
       </Container>

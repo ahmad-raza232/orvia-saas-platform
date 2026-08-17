@@ -26,8 +26,8 @@ const services = [
     icon: Building2,
   },
   {
-    title: 'International courier',
-    description: 'Global parcel forwarding and express services.',
+    title: 'Proof of delivery',
+    description: 'Capture recipient name, delivery notes, and photo or signature evidence.',
     icon: Globe,
   },
   {
@@ -43,7 +43,7 @@ const Services = () => (
       <SectionHeading
         eyebrow="Services"
         title="Logistics that stay out of the way"
-        description="Comprehensive courier solutions for households, shops, and growing e-commerce brands."
+        description="ORVIA covers the operational loop your team already runs — booking, riders, COD, tracking, and POD."
       />
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((service) => (

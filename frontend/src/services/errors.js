@@ -20,7 +20,8 @@ const CODE_MESSAGES = {
   POD_EVIDENCE_EXPIRED: 'This evidence upload has expired.',
   POD_EVIDENCE_NOT_READY: 'This evidence is not ready for download.',
   STORAGE_UNAVAILABLE: 'File storage is temporarily unavailable.',
-  INTERNAL_ERROR: 'Something went wrong on the server. Please try again.',
+  INVALID_TRACKING_NUMBER:
+    'That is not a valid ORVIA tracking ID. Use the format ORVIA-XXXXXXXXXX.',
 };
 
 /** True only for shipment detail URLs like /shipments/{uuid}, not list/query routes. */
@@ -33,7 +34,7 @@ function shipmentNotFoundMessage(path) {
   if (isShipmentDetailPath(path)) {
     return 'Shipment not found.';
   }
-  return 'Shipments could not be loaded. Confirm the Softorica API is running and your organization is selected.';
+      return 'Shipments could not be loaded. Confirm the ORVIA API is running and your organization is selected.';
 }
 
 export function getApiErrorMessage(error, fallback = 'Something went wrong. Please try again.') {
@@ -47,7 +48,7 @@ export function getApiErrorMessage(error, fallback = 'Something went wrong. Plea
   const path = String(error?.config?.url || '');
 
   if (error?.message === 'Network Error' || error?.code === 'ERR_NETWORK') {
-    return 'Unable to connect to Softorica server.';
+    return 'Unable to connect to the ORVIA API.';
   }
 
   if (code && CODE_MESSAGES[code] && code !== 'HTTP_ERROR') {
@@ -62,7 +63,7 @@ export function getApiErrorMessage(error, fallback = 'Something went wrong. Plea
         return `API route not found (${status || 404}): ${url}. Confirm VITE_TENANT_API_URL points at Softorica Modules 1–11 and the backend was restarted.`;
       }
       if (path.includes('/shipments')) return shipmentNotFoundMessage(path);
-      return 'The requested Softorica API route was not found. Confirm the tenant API is running.';
+      return 'The requested ORVIA API route was not found. Confirm the tenant API is running.';
     }
     return message;
   }

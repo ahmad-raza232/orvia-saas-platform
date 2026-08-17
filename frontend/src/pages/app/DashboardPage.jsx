@@ -20,6 +20,7 @@ const DashboardPage = () => {
   const [statusTotals, setStatusTotals] = useState({});
   const [notifications, setNotifications] = useState([]);
   const [counts, setCounts] = useState({ customers: 0, riders: 0, notifications: 0 });
+  const [countErrors, setCountErrors] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [shipmentsError, setShipmentsError] = useState('');
@@ -28,7 +29,9 @@ const DashboardPage = () => {
     setLoading(true);
     setError('');
     setShipmentsError('');
+    setCountErrors({});
     const nextStatus = {};
+    const nextErrors = {};
     try {
       const tasks = [];
       if (permissions.canReadShipments) {
@@ -67,6 +70,7 @@ const DashboardPage = () => {
             })
             .catch(() => {
               nextStatus.customers = null;
+              nextErrors.customers = true;
             })
         );
       }
@@ -79,6 +83,7 @@ const DashboardPage = () => {
             })
             .catch(() => {
               nextStatus.riders = null;
+              nextErrors.riders = true;
             })
         );
       }
@@ -91,9 +96,10 @@ const DashboardPage = () => {
               nextStatus.notifications = res.data.total || 0;
             })
             .catch((err) => {
-              console.warn('[Softorica] dashboard notifications:', getApiErrorMessage(err));
+              console.warn('[ORVIA] dashboard notifications:', getApiErrorMessage(err));
               setNotifications([]);
               nextStatus.notifications = null;
+              nextErrors.notifications = true;
             })
         );
       }
@@ -103,6 +109,7 @@ const DashboardPage = () => {
         riders: nextStatus.riders ?? 0,
         notifications: nextStatus.notifications ?? 0,
       });
+      setCountErrors(nextErrors);
     } catch (err) {
       setError(getApiErrorMessage(err, 'Unable to load dashboard'));
     } finally {
@@ -117,7 +124,7 @@ const DashboardPage = () => {
 
   const statusCounts = statusTotals;
 
-  if (loading) return <LoadingState label="Loading Softorica dashboard…" />;
+  if (loading) return <LoadingState label="Loading ORVIA dashboard…" />;
   if (error) {
     return (
       <ErrorState title="Dashboard unavailable" description={error} onRetry={load} />
@@ -169,7 +176,9 @@ const DashboardPage = () => {
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
                   Customers
                 </p>
-                <p className="mt-1 font-display text-2xl text-ink">{counts.customers}</p>
+                  <p className="mt-1 font-display text-2xl text-ink">
+                    {countErrors.customers ? '—' : counts.customers}
+                  </p>
               </div>
             </div>
           </Card>
@@ -182,7 +191,9 @@ const DashboardPage = () => {
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
                   Riders
                 </p>
-                <p className="mt-1 font-display text-2xl text-ink">{counts.riders}</p>
+                  <p className="mt-1 font-display text-2xl text-ink">
+                    {countErrors.riders ? '—' : counts.riders}
+                  </p>
               </div>
             </div>
           </Card>
@@ -195,7 +206,9 @@ const DashboardPage = () => {
                 <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
                   Notifications
                 </p>
-                <p className="mt-1 font-display text-2xl text-ink">{counts.notifications}</p>
+                  <p className="mt-1 font-display text-2xl text-ink">
+                    {countErrors.notifications ? '—' : counts.notifications}
+                  </p>
               </div>
             </div>
           </Card>
@@ -236,7 +249,7 @@ const DashboardPage = () => {
             <div className="p-6">
               <EmptyState
                 title="No shipments yet"
-                description="Create your first Softorica shipment to start operations."
+                description="Create your first ORVIA shipment to start operations."
                 actionLabel={permissions.canWriteShipments ? 'Create shipment' : undefined}
                 to={permissions.canWriteShipments ? '/app/shipments/new' : undefined}
               />

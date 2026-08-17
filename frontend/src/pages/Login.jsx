@@ -18,6 +18,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const from = location.state?.from?.pathname || '/app';
+  const showDemoHint = import.meta.env.DEV;
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -62,21 +63,20 @@ const Login = () => {
   return (
     <AuthShell
       title="Welcome back"
-      subtitle="Sign in to your Softorica logistics workspace."
+      subtitle="Sign in to your ORVIA logistics workspace."
       footer={
         <>
           <p className="mt-6 text-center text-sm text-ink-secondary">
             Don&apos;t have an account?{' '}
             <Link to="/register" className="font-semibold text-olive hover:underline">
-              Create account
+              Get Started
             </Link>
           </p>
           <p className="mt-3 text-center text-xs text-ink-muted">
-            Looking for public Softorica / ORVIA tracking?{' '}
+            Looking for public tracking?{' '}
             <Link to="/track" className="font-semibold text-olive hover:underline">
-              Track a shipment
+              Track with an ORVIA ID
             </Link>
-            . Legacy GBQ IDs remain supported on the public track page.
           </p>
         </>
       }
@@ -102,6 +102,13 @@ const Login = () => {
           error={errors.password}
           autoComplete="current-password"
         />
+        {showDemoHint && (
+          <p className="rounded-md bg-muted px-3 py-2 text-xs text-ink-secondary">
+            Local demo: enable <span className="font-mono">DEMO_SEED_ENABLED</span> on the API,
+            then sign in with the email from your backend <span className="font-mono">.env</span>.
+            Accounts persist in PostgreSQL across restarts.
+          </p>
+        )}
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? 'Signing in…' : 'Sign in'}
         </Button>

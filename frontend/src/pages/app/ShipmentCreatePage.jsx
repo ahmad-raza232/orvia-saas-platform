@@ -137,8 +137,8 @@ const ShipmentCreatePage = () => {
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT_COD);
   const [codAmount, setCodAmount] = useState('');
   const [currency, setCurrency] = useState('PKR');
-  const [sender, setSender] = useState(emptyParty);
-  const [receiver, setReceiver] = useState(emptyParty);
+  const [sender, setSender] = useState(() => emptyParty());
+  const [receiver, setReceiver] = useState(() => emptyParty());
   const [parcel, setParcel] = useState({
     weight_kg: '1',
     quantity: '1',
@@ -153,7 +153,7 @@ const ShipmentCreatePage = () => {
     return (
       <EmptyState
         title="Not allowed"
-        description="Your role cannot create Softorica shipments."
+        description="Your role cannot create ORVIA shipments."
         actionLabel="Back to shipments"
         to="/app/shipments"
       />
@@ -245,8 +245,8 @@ const ShipmentCreatePage = () => {
         title="Create shipment"
         description={
           organization
-            ? `Softorica workspace · ${organization.name}`
-            : 'Softorica tenant shipment booking'
+            ? `ORVIA workspace · ${organization.name}`
+            : 'ORVIA tenant shipment booking'
         }
         action={
           <Button to="/app/shipments" variant="outline" size="sm">
@@ -427,8 +427,8 @@ const ShipmentCreatePage = () => {
               <div>
                 <p className="text-sm font-semibold text-olive">Cash on Delivery (COD)</p>
                 <p className="mt-1 text-xs text-ink-secondary">
-                  COD amount is stored on the Softorica shipment (`cod_amount` + `currency`).
-                  Softorica SaaS does not calculate separate COD service charges.
+                  COD amount is stored on the ORVIA shipment (`cod_amount` + `currency`).
+                  ORVIA does not calculate separate COD service charges.
                 </p>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">

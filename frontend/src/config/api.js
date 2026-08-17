@@ -1,25 +1,27 @@
 /**
- * Legacy customer-portal API (goburq.com). Do not rename.
- * Used by BookParcel, MyBookings, TrackOrder, etc.
+ * Legacy customer-portal API (goburq.com). Used only by leftover booking/track
+ * compatibility routes. Do not rename. Do not point SaaS /app traffic here.
  */
 export const API_URL = (
   import.meta.env.VITE_API_URL || 'https://goburq.com/api'
 ).replace(/\/$/, '');
 
 /**
- * Modules 1–11 Softorica tenant SaaS API (FastAPI /api/v1).
- * Override with VITE_TENANT_API_URL in local/production env.
+ * ORVIA tenant SaaS API (FastAPI /api/v1).
+ * Production builds default to a same-origin relative path so localhost is never baked in.
+ * Local Vite can override with VITE_TENANT_API_URL or use the /api proxy.
  */
 export const TENANT_API_URL = (
-  import.meta.env.VITE_TENANT_API_URL || 'http://127.0.0.1:8000/api/v1'
+  import.meta.env.VITE_TENANT_API_URL ||
+  (import.meta.env.PROD ? '/api/v1' : '/api/v1')
 ).replace(/\/$/, '');
 
-/** Legacy GoBurq portal session keys — keep forever for booking/tracking. */
+/** Legacy portal session keys — keep for booking/tracking compatibility only. */
 export const TOKEN_KEY = 'goburq_token';
 export const USER_KEY = 'goburq_user';
 
 /**
- * Softorica SaaS session keys (separate from legacy GoBurq).
+ * ORVIA SaaS session keys (separate from legacy portal keys).
  * Prevents SaaS JWTs from being sent to goburq.com and vice versa.
  */
 export const TENANT_TOKEN_KEY = 'softorica_access_token';

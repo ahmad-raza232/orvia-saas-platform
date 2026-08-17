@@ -24,19 +24,18 @@ import {
   fetchSoftoricaPublicTracking,
   isGbqTrackingId,
   isOrviaTrackingId,
+  looksLikeOrviaTrackingId,
 } from '../utils/tracking';
 
 /**
- * Dual public tracking:
- * - ORVIA-XXXXXXXXXX → Softorica tenant API /public/tracking
- * - GBQ… → legacy GoBurq goburq.com bookings/track
+ * Public ORVIA tracking. GBQ IDs are resolved only as a silent legacy compatibility path.
  */
 const TrackOrder = () => {
   const [searchParams] = useSearchParams();
   const [trackingId, setTrackingId] = useState('');
   const [parcel, setParcel] = useState(null);
   const [history, setHistory] = useState([]);
-  const [source, setSource] = useState(null); // 'softorica' | 'goburq'
+  const [source, setSource] = useState(null); // 'orvia' | 'legacy'
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -54,9 +53,17 @@ const TrackOrder = () => {
     setSource(null);
 
     try {
+      if (looksLikeOrviaTrackingId(trimmedId) && !isOrviaTrackingId(trimmedId)) {
+        const message =
+          'That is not a valid ORVIA tracking ID. Use the format ORVIA-XXXXXXXXXX.';
+        setError(message);
+        toast.error(message);
+        return;
+      }
+
       if (isOrviaTrackingId(trimmedId)) {
         const data = await fetchSoftoricaPublicTracking(trimmedId);
-        setSource('softorica');
+        setSource('orvia');
         setParcel({
           tracking_id: data.tracking_number,
           status: data.status,
@@ -86,27 +93,31 @@ const TrackOrder = () => {
           headers: { 'Content-Type': 'application/json' },
         });
         if (data && data.parcel) {
-          setSource('goburq');
+          setSource('legacy');
           setParcel(data.parcel);
           setHistory(Array.isArray(data.history) ? data.history : []);
-          toast.success('Parcel found!');
+          toast.success('Shipment found');
         } else {
-          setError('No parcel data returned');
-          toast.error('No parcel data found');
+          setError('No shipment data returned for this tracking ID.');
+          toast.error('No shipment data found');
         }
         return;
       }
 
       const message =
-        'Invalid tracking ID. Softorica IDs look like ORVIA-XXXXXXXXXX. Legacy GoBurq IDs start with GBQ followed by digits.';
+        'Enter a valid ORVIA tracking ID in the format ORVIA-XXXXXXXXXX.';
       setError(message);
       toast.error(message);
     } catch (err) {
       console.error('Tracking Error:', err);
-      let message = 'Unable to track parcel';
+      let message = 'Unable to track this shipment';
       if (err.response) {
-        if (err.response.status === 404) {
-          message = 'Shipment not found. Please verify your tracking ID.';
+        if (err.response.status === 400) {
+          message =
+            err.response.data?.error?.message ||
+            'That is not a valid ORVIA tracking ID. Use the format ORVIA-XXXXXXXXXX.';
+        } else if (err.response.status === 404) {
+          message = 'No shipment found for this ORVIA tracking ID. Check the ID and try again.';
         } else if (err.response.status === 500) {
           message = 'Server error. Please try again later.';
         } else {
@@ -116,7 +127,7 @@ const TrackOrder = () => {
             `Error: ${err.response.status}`;
         }
       } else if (err.request) {
-        message = 'Cannot connect to the tracking service. Please try again.';
+        message = 'Cannot connect to the ORVIA tracking service. Please try again.';
       } else {
         message = err.message || 'An unexpected error occurred';
       }
@@ -169,11 +180,10 @@ const TrackOrder = () => {
     <div className="bg-canvas py-12">
       <Container className="max-w-4xl space-y-8">
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-olive">Tracking</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-olive">ORVIA tracking</p>
           <h1 className="mt-3 font-display text-h1 text-ink">Track your shipment</h1>
           <p className="mt-2 text-ink-secondary">
-            Softorica SaaS IDs use <span className="font-mono">ORVIA-…</span>. Legacy GoBurq IDs use{' '}
-            <span className="font-mono">GBQ…</span>.
+            Public tracking uses <span className="font-mono">ORVIA-XXXXXXXXXX</span>. No login required.
           </p>
         </div>
 
@@ -190,7 +200,7 @@ const TrackOrder = () => {
                 setTrackingId(event.target.value.toUpperCase());
                 setError('');
               }}
-              placeholder="ORVIA-XXXXXXXXXX or GBQ…"
+              placeholder="ORVIA-XXXXXXXXXX"
               maxLength={24}
               className="flex-1 rounded-md border border-line bg-surface px-4 py-3 uppercase focus:border-olive focus:outline-none focus:ring-4 focus:ring-olive/15"
             />
@@ -209,8 +219,7 @@ const TrackOrder = () => {
             <ErrorState className="mt-4" title="Tracking failed" description={error} />
           )}
           <p className="mt-4 text-sm text-ink-muted">
-            Example Softorica ID: <strong className="font-mono">ORVIA-KJTDMF2XMK</strong>. Legacy
-            GoBurq remains <strong className="font-mono">GBQ</strong> + digits.
+            Example: <strong className="font-mono">ORVIA-KJTDMF2XMK</strong>
           </p>
         </Card>
 
@@ -218,7 +227,7 @@ const TrackOrder = () => {
           <div className="space-y-5 animate-fade-up">
             <Card className="bg-olive p-6 text-peach">
               <p className="text-xs uppercase tracking-[0.16em] text-peach/70">
-                {source === 'softorica' ? 'Softorica shipment' : 'GoBurq legacy parcel'}
+                {source === 'legacy' ? 'Legacy shipment' : 'ORVIA shipment'}
               </p>
               <div className="mt-2 flex items-start justify-between gap-4">
                 <div>
@@ -287,7 +296,7 @@ const TrackOrder = () => {
                     <p className="font-semibold">{parcel.parcel_type}</p>
                   </div>
                 )}
-                {parcel.has_pod != null && source === 'softorica' && (
+                {parcel.has_pod != null && source === 'orvia' && (
                   <div>
                     <p className="text-sm text-ink-muted">Proof of delivery</p>
                     <p className="font-semibold">{parcel.has_pod ? 'Recorded' : 'Not yet'}</p>
@@ -337,7 +346,7 @@ const TrackOrder = () => {
           <EmptyState
             icon={Search}
             title="Enter a tracking ID to get started"
-            description="Use your Softorica ORVIA tracking ID, or a legacy GoBurq GBQ ID."
+            description="Use your ORVIA-XXXXXXXXXX tracking ID from the shipment slip."
           />
         )}
       </Container>

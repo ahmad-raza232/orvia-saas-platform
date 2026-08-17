@@ -60,7 +60,7 @@ const NotificationsPage = () => {
     );
   }
 
-  if (loading) return <LoadingState label="Loading Softorica notifications…" />;
+  if (loading) return <LoadingState label="Loading notifications…" />;
   if (error) {
     return (
       <ErrorState title="Notifications unavailable" description={error} onRetry={load} />
@@ -73,7 +73,7 @@ const NotificationsPage = () => {
     <div className="space-y-6 animate-fade-up">
       <SectionHeading
         title="Notifications"
-        description="Delivery history from the Softorica transactional outbox"
+        description="Delivery history from the ORVIA transactional outbox"
       />
 
       {permissions.canWriteNotificationSettings && (
@@ -121,7 +121,7 @@ const NotificationsPage = () => {
       {items.length === 0 ? (
         <EmptyState
           title="No notifications yet"
-          description="When Softorica shipments change status, notification rows appear after the worker processes the outbox."
+          description="When ORVIA shipments change status, notification rows appear after the worker processes the outbox."
         />
       ) : (
         <Card className="overflow-hidden p-0">

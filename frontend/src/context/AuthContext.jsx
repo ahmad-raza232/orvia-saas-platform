@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       if (err?.response?.status === 404) {
         console.warn(
-          '[Softorica] /auth/organizations returned 404. Restart the tenant API so Modules 1–11 routes are loaded.'
+          '[ORVIA] /auth/organizations returned 404. Restart the tenant API so Modules 1–11 routes are loaded.'
         );
       }
       setOrganizations([]);
@@ -119,12 +119,12 @@ export const AuthProvider = ({ children }) => {
         } else if (error?.message === 'Network Error' || error?.code === 'ERR_NETWORK') {
           // Keep cached Softorica identity for UX, but do not treat session as verified.
           setIsAuthenticated(Boolean(localStorage.getItem(TENANT_TOKEN_KEY)));
-          console.warn('[Softorica] Unable to connect to Softorica server during session restore.');
+          console.warn('[ORVIA] Unable to connect to the ORVIA API during session restore.');
         } else if (error?.response?.status >= 500) {
           // Keep token; user can retry. Do not wipe org on transient API failure.
-          console.warn('[Softorica] Session restore failed:', getApiErrorMessage(error));
+          console.warn('[ORVIA] Session restore failed:', getApiErrorMessage(error));
         } else if (!error?.response) {
-          console.warn('[Softorica] Session restore failed without response.');
+          console.warn('[ORVIA] Session restore failed without response.');
         } else {
           // Unexpected client/auth payload failure — clear to avoid stale "signed in" UI.
           clearSession();

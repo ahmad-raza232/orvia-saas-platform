@@ -24,7 +24,7 @@ const AuthShell = ({ title, subtitle, children, wide = false, footer }) => (
           <Logo to="/" />
         </div>
         <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-olive">
-          Softorica
+          ORVIA · by Softorica
         </p>
         <h1 className="font-display text-3xl text-ink sm:text-[2rem]">{title}</h1>
         {subtitle && <p className="mt-2 text-sm text-ink-secondary">{subtitle}</p>}

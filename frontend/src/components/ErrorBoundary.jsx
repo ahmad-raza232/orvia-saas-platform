@@ -12,7 +12,7 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Softorica render error:', error, errorInfo);
+    console.error('ORVIA render error:', error, errorInfo);
   }
 
   componentDidUpdate(prevProps) {
@@ -36,8 +36,11 @@ class ErrorBoundary extends Component {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F7F1E9] px-4">
         <div className="w-full max-w-md rounded-xl border border-[#E6DDD2] bg-white p-8 text-center shadow-sm">
-          <h1 className="text-2xl font-semibold text-[#1C1917]">Something went wrong</h1>
-          <p className="mt-2 text-sm text-[#57534E]">Try refreshing the page.</p>
+          <h1 className="text-2xl font-semibold text-[#1C1917]">This view couldn’t load</h1>
+          <p className="mt-2 text-sm text-[#57534E]">
+            You can retry this screen or return to the ORVIA home page. Other parts of the
+            workspace are still available.
+          </p>
           {isDev && (
             <pre className="mt-4 max-h-40 overflow-auto rounded-md bg-[#F3EBE1] p-3 text-left text-xs text-[#B42318]">
               {message}

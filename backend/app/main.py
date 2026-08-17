@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
@@ -9,9 +11,30 @@ import logging
 
 from app.api.v1.router import api_router
 from app.core.config import settings
-from app.db.database import engine
+from app.db.database import SessionLocal, engine
+from app.db.seed import seed_demo_workspace, seed_roles
 
 logger = logging.getLogger("orvia.api")
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    db = SessionLocal()
+    try:
+        seed_roles(db)
+        if settings.demo_seed_enabled and not settings.is_production:
+            seed_demo_workspace(
+                db,
+                email=settings.demo_seed_email or "",
+                password=settings.demo_seed_password or "",
+                org_name=settings.demo_seed_org_name,
+            )
+    except Exception:
+        logger.exception("startup seed failed")
+    finally:
+        db.close()
+    yield
+
 
 _disable_docs = settings.is_production
 app = FastAPI(
@@ -20,6 +43,7 @@ app = FastAPI(
     docs_url=None if _disable_docs else "/docs",
     redoc_url=None if _disable_docs else "/redoc",
     openapi_url=None if _disable_docs else "/openapi.json",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

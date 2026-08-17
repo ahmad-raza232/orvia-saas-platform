@@ -9,10 +9,6 @@ const Hero = () => {
   const [trackingId, setTrackingId] = useState('');
   const navigate = useNavigate();
 
-  const scrollToBooking = () => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   const handleTrack = (event) => {
     event.preventDefault();
     if (trackingId.trim()) {
@@ -25,24 +21,24 @@ const Hero = () => {
       <Container className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
         <div className="animate-fade-up">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-olive">
-            Softorica logistics
+            ORVIA logistics SaaS · by Softorica
           </p>
           <h1 className="font-display text-display text-ink">
-            Move what matters.
-            <span className="block text-olive">We’ll get it there.</span>
+            Operations software
+            <span className="block text-olive">for every shipment.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-secondary">
-            Reliable parcel delivery and logistics for individuals and businesses
-            across Pakistan — same-day, nationwide, and COD, handled with care.
+            Book parcels, assign riders, collect COD, and share a public ORVIA tracking
+            page — a professional workspace for logistics teams, built by Softorica.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Button size="lg" onClick={scrollToBooking}>
-              Book a pickup
-              <ArrowRight className="h-4 w-4" />
+            <Button size="lg" to="/login">
+              Login
             </Button>
-            <Button href="tel:+923263253256" variant="outline" size="lg">
-              Call us
+            <Button size="lg" variant="outline" to="/register">
+              Get Started
+              <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
 
@@ -51,7 +47,7 @@ const Hero = () => {
             className="mt-8 flex flex-col gap-3 rounded-lg border border-line bg-surface p-3 shadow-xs sm:flex-row sm:items-center"
           >
             <label htmlFor="hero-tracking" className="sr-only">
-              Tracking ID
+              ORVIA tracking ID
             </label>
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
@@ -59,7 +55,7 @@ const Hero = () => {
                 id="hero-tracking"
                 value={trackingId}
                 onChange={(event) => setTrackingId(event.target.value.toUpperCase())}
-                placeholder="ORVIA-… or GBQ…"
+                placeholder="ORVIA-XXXXXXXXXX"
                 className="w-full rounded-md border border-transparent bg-muted py-3 pl-10 pr-4 text-sm uppercase text-ink placeholder:normal-case placeholder:text-ink-muted focus:border-olive focus:outline-none"
               />
             </div>
@@ -69,13 +65,13 @@ const Hero = () => {
           <div className="mt-8 grid max-w-md grid-cols-2 gap-3">
             <div className="rounded-lg border border-line bg-surface px-4 py-3">
               <Clock className="mb-2 h-4 w-4 text-olive" />
-              <p className="font-display text-2xl text-olive">98%</p>
-              <p className="text-xs text-ink-muted">On-time deliveries</p>
+              <p className="font-display text-2xl text-olive">Live</p>
+              <p className="text-xs text-ink-muted">Public ORVIA tracking</p>
             </div>
             <div className="rounded-lg border border-line bg-peach-soft px-4 py-3">
               <ShieldCheck className="mb-2 h-4 w-4 text-olive" />
-              <p className="font-display text-2xl text-olive">100%</p>
-              <p className="text-xs text-ink-muted">Secure handling</p>
+              <p className="font-display text-2xl text-olive">Tenant</p>
+              <p className="text-xs text-ink-muted">Isolated organization data</p>
             </div>
           </div>
         </div>
@@ -85,7 +81,7 @@ const Hero = () => {
           <div className="absolute -bottom-5 -right-5 hidden h-24 w-24 rounded-lg bg-olive lg:block" />
           <img
             src={heroImg}
-            alt="Carefully wrapped Softorica parcel on a warm editorial surface"
+            alt="Carefully prepared ORVIA parcel on a warm editorial surface"
             className="relative z-10 aspect-[4/3] w-full rounded-lg object-cover shadow-md"
           />
         </div>

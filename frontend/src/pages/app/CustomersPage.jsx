@@ -83,14 +83,14 @@ const CustomersPage = () => {
           </Button>
         }
       />
-      {loading && <LoadingState label="Loading Softorica customers…" />}
+      {loading && <LoadingState label="Loading customers…" />}
       {error && (
         <ErrorState title="Customers unavailable" description={error} onRetry={load} />
       )}
       {!loading && !error && items.length === 0 && (
         <EmptyState
           title="No customers yet"
-          description="Add a Softorica customer to link them to shipments."
+          description="Add a customer to link them to shipments."
           actionLabel="New customer"
           onAction={() => setOpen(true)}
         />

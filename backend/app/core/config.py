@@ -55,6 +55,11 @@ class Settings(BaseSettings):
     outbox_max_attempts: int = 3
     outbox_retry_base_seconds: int = 10
 
+    demo_seed_enabled: bool = False
+    demo_seed_email: str | None = None
+    demo_seed_password: str | None = Field(default=None, repr=False)
+    demo_seed_org_name: str = "ORVIA Demo"
+
     storage_provider: str = "memory"
     memory_storage_public_base_url: str = "http://127.0.0.1:8000"
     s3_endpoint_url: str | None = None
@@ -96,6 +101,8 @@ class Settings(BaseSettings):
             raise ValueError("AUTH_LOGIN_RATE_LIMIT_WINDOW_SECONDS must be at least 1")
         if not self.is_production:
             return self
+        if self.demo_seed_enabled:
+            raise ValueError("DEMO_SEED_ENABLED cannot be true in production")
         if not (self.database_url or "").strip():
             raise ValueError("DATABASE_URL is required in production")
         secret = (self.jwt_secret or "").strip()

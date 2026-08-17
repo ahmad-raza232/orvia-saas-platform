@@ -70,7 +70,7 @@ const AppShell = () => {
   };
 
   const NavItems = ({ onNavigate }) => (
-    <nav className="flex-1 space-y-1 px-3" aria-label="Softorica workspace">
+    <nav className="flex-1 space-y-1 px-3" aria-label="ORVIA workspace">
       {links.map((item) => (
         <NavLink
           key={item.to}
@@ -138,7 +138,7 @@ const AppShell = () => {
               </div>
               <div className="hidden lg:block">
                 <p className="text-sm text-ink-secondary">
-                  {organization?.name || 'Softorica workspace'}
+                  {organization?.name || 'ORVIA workspace'}
                 </p>
               </div>
             </div>

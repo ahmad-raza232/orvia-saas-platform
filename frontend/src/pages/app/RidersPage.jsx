@@ -80,14 +80,14 @@ const RidersPage = () => {
           ) : null
         }
       />
-      {loading && <LoadingState label="Loading Softorica riders…" />}
+      {loading && <LoadingState label="Loading riders…" />}
       {error && (
         <ErrorState title="Riders unavailable" description={error} onRetry={load} />
       )}
       {!loading && !error && items.length === 0 && (
         <EmptyState
           title="No riders yet"
-          description="Add Softorica riders before assigning out-for-delivery shipments."
+          description="Add riders before assigning out-for-delivery shipments."
           actionLabel={permissions.canManageRiders ? 'New rider' : undefined}
           onAction={permissions.canManageRiders ? () => setOpen(true) : undefined}
         />

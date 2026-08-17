@@ -19,6 +19,14 @@ export function isOrviaTrackingId(value) {
   return ORVIA_RE.test(String(value || '').trim().toUpperCase());
 }
 
+/** True when the value is intended as an ORVIA ID but may still be malformed. */
+export function looksLikeOrviaTrackingId(value) {
+  return String(value || '')
+    .trim()
+    .toUpperCase()
+    .startsWith('ORVIA-');
+}
+
 export function isGbqTrackingId(value) {
   const cleaned = String(value || '').trim().toUpperCase();
   return GBQ_RE.test(cleaned) && cleaned.length >= 10;

@@ -85,14 +85,14 @@ const OnboardingPage = () => {
   return (
     <div className="mx-auto max-w-lg space-y-6 animate-fade-up">
       <SectionHeading
-        title="Set up your Softorica workspace"
+        title="Set up your ORVIA workspace"
         description="Create an organization, choose one you already belong to, or accept an invitation."
       />
 
       <Card className="space-y-3 p-5">
         <h2 className="font-display text-lg text-ink">Accept invitation</h2>
         <p className="text-sm text-ink-muted">
-          If you were invited, paste the one-time token from your Softorica invitation email
+          If you were invited, paste the one-time token from your ORVIA invitation email
           (or local API logs when email delivery uses logging). The API never returns the raw
           token in list responses.
         </p>

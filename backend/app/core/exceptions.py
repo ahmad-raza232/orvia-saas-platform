@@ -96,6 +96,18 @@ class NotFoundError(APIError):
         super().__init__(status.HTTP_404_NOT_FOUND, "NOT_FOUND", message)
 
 
+class InvalidTrackingNumberError(APIError):
+    def __init__(
+        self,
+        message: str = "Use a valid ORVIA tracking ID in the format ORVIA-XXXXXXXXXX.",
+    ) -> None:
+        super().__init__(
+            status.HTTP_400_BAD_REQUEST,
+            "INVALID_TRACKING_NUMBER",
+            message,
+        )
+
+
 class ReservedSlugError(APIError):
     def __init__(self) -> None:
         super().__init__(
